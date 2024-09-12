@@ -10,8 +10,10 @@ public class Activater : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(key) && active)
+        if(Input.GetKeyDown(key) && active) {
             Destroy(note);
+            //StartCoroutine(Pressed());
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D col) {
@@ -23,4 +25,8 @@ public class Activater : MonoBehaviour
     private void OnTriggerExit2D(Collider2D col) {
         active = false;        
     }
+
+    /*private IEnumerator Pressed() {
+
+    }*/
 }
