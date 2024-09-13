@@ -5,14 +5,27 @@ using UnityEngine;
 public class Activater : MonoBehaviour
 {
     [SerializeField] private KeyCode key;
-    private bool active = false;
+    private SpriteRenderer sr;
     private GameObject note;
+    private bool active = false;
+    private Color old;
 
-    void Update()
-    {
+    private void Awake() {
+        sr = GetComponent<SpriteRenderer>();
+    }
+
+    private void Start() {
+        old = sr.color;
+    }
+
+    void Update() {
+
+        if(Input.GetKeyDown(key)) {
+            StartCoroutine(Pressed());
+        }
+
         if(Input.GetKeyDown(key) && active) {
             Destroy(note);
-            //StartCoroutine(Pressed());
         }
     }
 
@@ -26,7 +39,9 @@ public class Activater : MonoBehaviour
         active = false;        
     }
 
-    /*private IEnumerator Pressed() {
-
-    }*/
+    private IEnumerator Pressed() {
+        sr.color = new Color(0, 0, 0);
+        yield return new WaitForSeconds(0.05f);
+        sr.color = old;
+    }
 }
