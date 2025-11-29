@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    [SerializeField] private float speed;
+    public float spawnY;
+    public float hitY;
+    public double spawnTime;
+    public double hitTime;
 
-    private void Awake() {
-        rb = GetComponent<Rigidbody2D>();
-    }
-
-    void Start()
+    void Update()
     {
-        rb.velocity = new Vector2(-speed, 0);
+        // Hitung progress dari spawn -> hit
+        double t = (AudioSettings.dspTime - NoteSpawner.songStartDspTime - spawnTime) / (hitTime - spawnTime);
+        t = Mathf.Clamp01((float)t);
+
+        // Interpolasi posisi Y
+        float y = Mathf.Lerp(spawnY, hitY, (float)t);
+        transform.position = new Vector2(transform.position.x, y);
+
+        // Opsional: hapus note setelah melewati hit line
+        if (t >= 1f)
+            Destroy(gameObject);
     }
 }
