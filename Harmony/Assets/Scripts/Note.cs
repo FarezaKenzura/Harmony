@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    public float hitY;
-    public float speed;
+    public float hitY { get; set; }
+    public float speed { get; set; }
 
-    void Update()
+    private void Update()
     {
         transform.position += Vector3.down * speed * Time.deltaTime;
 

@@ -5,48 +5,50 @@ using UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
-    public AudioSource music;
-    public GameObject notePrefab;
+    [SerializeField] private AudioSource music;
+    [SerializeField] private GameObject notePrefab;
 
-    public float[] laneX = { -4f, -2f, 0f, 2f, 4f };
-    public float spawnY = 6f;
-    public float hitY = -3.5f;
-    public float fallSpeed = 5f;
+    [SerializeField] private float[] laneX;
+    [SerializeField] private float spawnY = 6f;
+    [SerializeField] private float hitY = -3.5f;
+    [SerializeField] private float fallSpeed = 5f;
 
-    private Beatmap beatmap;
-    public static double songStartDsp;
+    private BeatmapBinary beatmap;
+    private double dspStart;
 
-    void Start()
+    private void Start()
     {
-        string json = File.ReadAllText(Application.persistentDataPath + "/beatmap.json");
-        beatmap = JsonUtility.FromJson<Beatmap>(json);
+        string path = Application.persistentDataPath + "/beatmap.bin";
+        beatmap = new BeatmapLoader().LoadBinary(path);
 
-        songStartDsp = AudioSettings.dspTime;
-        music.Play();
+        dspStart = AudioSettings.dspTime + 0.1;
+        music.PlayScheduled(dspStart);
 
-        foreach (var note in beatmap.notes)
-        {
-            StartCoroutine(ScheduleNote(note));
-        }
+        foreach (var e in beatmap.notes)
+            StartCoroutine(Schedule(e));
     }
 
-    IEnumerator ScheduleNote(NoteData note)
+    IEnumerator Schedule(NoteEvent e)
     {
-        float distance = spawnY - hitY;
-        float fallTime = distance / fallSpeed;
+        double fallTime = (spawnY - hitY) / fallSpeed;
+        double spawnTime = e.hitTime + beatmap.offset - fallTime;
 
-        double spawnTime = note.time - fallTime;
-        double now = AudioSettings.dspTime - songStartDsp;
+        double now = AudioSettings.dspTime - dspStart;
         double delay = spawnTime - now;
 
-        if (delay < 0) delay = 0;
+        if (delay > 0)
+            yield return new WaitForSeconds((float)delay);
 
-        yield return new WaitForSeconds((float)delay);
+        Spawn(e);
+    }
 
-        GameObject obj = Instantiate(notePrefab, new Vector2(laneX[note.lane], spawnY), Quaternion.identity);
+    private void Spawn(NoteEvent e)
+    {
+        Vector2 pos = new Vector2(laneX[e.lane], spawnY);
+        GameObject obj = Instantiate(notePrefab, pos, Quaternion.identity);
 
         Note n = obj.GetComponent<Note>();
-        n.hitY = hitY;
         n.speed = fallSpeed;
+        n.hitY = hitY;
     }
 }

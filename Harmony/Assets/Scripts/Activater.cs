@@ -5,10 +5,10 @@ using UnityEngine.EventSystems;
 
 public class Activater : MonoBehaviour, IPointerDownHandler
 {
-    public int laneIndex;
+    [SerializeField] private int laneIndex;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        SingletonHub.Instance.Get<BeatmapManager>().RecordLane(laneIndex);
+        SingletonHub.Instance.Get<BeatmapRecorder>().RecordLane(laneIndex);
     }
 }
