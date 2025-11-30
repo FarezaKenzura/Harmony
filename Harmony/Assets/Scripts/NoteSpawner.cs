@@ -11,49 +11,42 @@ public class NoteSpawner : MonoBehaviour
     public float[] laneX = { -4f, -2f, 0f, 2f, 4f };
     public float spawnY = 6f;
     public float hitY = -3.5f;
-    public float speed = 5f; // untuk menghitung fallTime
+    public float fallSpeed = 5f;
 
     private Beatmap beatmap;
-    private int nextIndex = 0;
-    public static double songStartDspTime;
+    public static double songStartDsp;
 
     void Start()
     {
-        // Baca beatmap JSON
-        string path = Application.persistentDataPath + "/beatmap.json";
-        if (!File.Exists(path))
-        {
-            Debug.LogError("Beatmap JSON tidak ditemukan di " + path);
-            return;
-        }
-
-        string json = File.ReadAllText(path);
+        string json = File.ReadAllText(Application.persistentDataPath + "/beatmap.json");
         beatmap = JsonUtility.FromJson<Beatmap>(json);
 
-        songStartDspTime = AudioSettings.dspTime;
+        songStartDsp = AudioSettings.dspTime;
         music.Play();
+
+        foreach (var note in beatmap.notes)
+        {
+            StartCoroutine(ScheduleNote(note));
+        }
     }
 
-    void Update()
+    IEnumerator ScheduleNote(NoteData note)
     {
-        if (beatmap == null || nextIndex >= beatmap.notes.Count) return;
+        float distance = spawnY - hitY;
+        float fallTime = distance / fallSpeed;
 
-        double songTime = AudioSettings.dspTime - songStartDspTime;
-        var note = beatmap.notes[nextIndex];
+        double spawnTime = note.time - fallTime;
+        double now = AudioSettings.dspTime - songStartDsp;
+        double delay = spawnTime - now;
 
-        // Waktu yang dibutuhkan note untuk jatuh dari spawnY ke hitY
-        double fallTime = (spawnY - hitY) / speed;
-        // Spawn lebih awal supaya note sampai hit line tepat waktu
-        if (songTime >= note.time - fallTime)
-        {
-            Debug.Log("songTime = " + songTime + " | SpawnTime = " + (note.time - fallTime));
-            GameObject obj = Instantiate(notePrefab, new Vector2(laneX[note.lane], spawnY), Quaternion.identity);
-            Note n = obj.GetComponent<Note>();
-            n.hitY = hitY;
-            n.spawnTime = songTime;
-            n.hitTime = note.time;
-            n.spawnY = spawnY;
-            nextIndex++;
-        }
+        if (delay < 0) delay = 0;
+
+        yield return new WaitForSeconds((float)delay);
+
+        GameObject obj = Instantiate(notePrefab, new Vector2(laneX[note.lane], spawnY), Quaternion.identity);
+
+        Note n = obj.GetComponent<Note>();
+        n.hitY = hitY;
+        n.speed = fallSpeed;
     }
 }
