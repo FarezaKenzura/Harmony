@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class BeatmapLoader : MonoBehaviour
 {
+    private void Awake()
+    {
+        SingletonHub.Instance.Register(this);
+    }
+
     public BeatmapBinary LoadBinary(string path)
     {
         BeatmapBinary beatmap = new BeatmapBinary();

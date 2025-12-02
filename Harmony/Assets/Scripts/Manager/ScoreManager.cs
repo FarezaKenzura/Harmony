@@ -12,7 +12,7 @@ public enum ComboLevel
 public class ScoreManager : MonoBehaviour
 {
     public event System.Action<int> OnScoreChanged;
-    private int _score;
+    [SerializeField] private int _score;
 
     private void Awake()
     {

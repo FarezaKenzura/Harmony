@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Activater : MonoBehaviour, IPointerDownHandler
+public class Capturer : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private int laneIndex;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        SingletonHub.Instance.Get<NoteManager>().TryHitNote(laneIndex);
+        SingletonHub.Instance.Get<BeatmapRecorder>().RecordLane(laneIndex);
     }
 }

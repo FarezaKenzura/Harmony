@@ -19,7 +19,7 @@ public class NoteSpawner : MonoBehaviour
     private void Start()
     {
         string path = Application.persistentDataPath + "/beatmap.bin";
-        beatmap = new BeatmapLoader().LoadBinary(path);
+        beatmap = SingletonHub.Instance.Get<BeatmapLoader>().LoadBinary(path);
 
         dspStart = AudioSettings.dspTime + 0.1;
         music.PlayScheduled(dspStart);
@@ -48,7 +48,11 @@ public class NoteSpawner : MonoBehaviour
         GameObject obj = Instantiate(notePrefab, pos, Quaternion.identity);
 
         Note n = obj.GetComponent<Note>();
+        n.laneIndex = e.lane;
         n.speed = fallSpeed;
         n.hitY = hitY;
+        n.spawnTime = AudioSettings.dspTime;
+
+        SingletonHub.Instance.Get<NoteManager>().RegisterNote(n);
     }
 }

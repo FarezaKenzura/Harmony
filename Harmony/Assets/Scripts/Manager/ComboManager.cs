@@ -43,7 +43,7 @@ public class ComboManager : MonoBehaviour
                 ResetCombo();
                 break;
         }
-
+        Debug.Log($"Hit: {level}, Current Combo: {_combo}");
         Destroy(note);
     }
 }
