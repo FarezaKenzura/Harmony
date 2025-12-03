@@ -45,7 +45,7 @@ public class NoteSpawner : MonoBehaviour
     private void Spawn(NoteEvent e)
     {
         Vector2 pos = new Vector2(laneX[e.lane], spawnY);
-        GameObject obj = Instantiate(notePrefab, pos, Quaternion.identity);
+        GameObject obj = SingletonHub.Instance.Get<ObjectPool>().GetPooledObject(notePrefab, pos, Quaternion.identity);
 
         Note n = obj.GetComponent<Note>();
         n.laneIndex = e.lane;

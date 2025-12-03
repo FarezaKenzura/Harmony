@@ -44,6 +44,6 @@ public class ComboManager : MonoBehaviour
                 break;
         }
         Debug.Log($"Hit: {level}, Current Combo: {_combo}");
-        Destroy(note);
+        SingletonHub.Instance.Get<ObjectPool>().ReturnToPool(note);
     }
 }

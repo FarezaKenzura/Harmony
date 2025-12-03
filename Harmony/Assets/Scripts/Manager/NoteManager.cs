@@ -9,6 +9,7 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private float hitY = -3.5f;
     [SerializeField] private float perfectThreshold = 0.1f;
     [SerializeField] private float goodThreshold = 0.5f;
+
     private void Awake()
     {
         SingletonHub.Instance.Register(this);

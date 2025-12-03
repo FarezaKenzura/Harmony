@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class Note : MonoBehaviour
         {
             SingletonHub.Instance.Get<ComboManager>().RegisterHit(ComboLevel.Miss, gameObject);
             SingletonHub.Instance.Get<NoteManager>().UnregisterNote(this);
-            Destroy(gameObject);
+            SingletonHub.Instance.Get<ObjectPool>().ReturnToPool(gameObject);
         }
     }
 }
