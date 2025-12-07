@@ -58,7 +58,11 @@ public class BeatmapRecorder : MonoBehaviour
 
     void SaveBinary()
     {
-        string path = Application.persistentDataPath + "/beatmap.bin";
+        string folderPath = Path.Combine(Application.dataPath, "StreamingAssets", "Beatmaps");
+        Directory.CreateDirectory(folderPath);
+
+        string safeSongName = beatmap.songName.Replace(' ', '_').Replace('\\', '_').Replace('/', '_');
+        string path = Path.Combine(folderPath, safeSongName + ".bin");
 
         using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
         {
@@ -73,6 +77,6 @@ public class BeatmapRecorder : MonoBehaviour
             }
         }
 
-        Debug.Log("Saved binary beatmap to: " + path);
+        Debug.Log("✅ Beatmap Developer Saved to StreamingAssets: " + path);
     }
 }
