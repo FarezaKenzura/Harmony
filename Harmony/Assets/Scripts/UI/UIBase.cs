@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public abstract class UIBase : MonoBehaviour
 {
-    [SerializeField] private GameObject root;
-    [SerializeField] private List<Button> closeButtons;
-    private bool isInitialized = false;
+    [SerializeField] private GameObject _root;
+    [SerializeField] private List<Button> _closeButtons;
+    private bool _isInitialized = false;
 
     private void Awake()
     {
-        foreach (var button in closeButtons)
+        foreach (var button in _closeButtons)
         {
             button.onClick.AddListener(Hide);
         }
@@ -21,11 +21,11 @@ public abstract class UIBase : MonoBehaviour
 
     public void Initialize()
     {
-        if (isInitialized) return;
+        if (_isInitialized) return;
 
         OnInitialize();
 
-        isInitialized = true;
+        _isInitialized = true;
     }
 
     protected abstract void OnInitialize();
@@ -35,8 +35,8 @@ public abstract class UIBase : MonoBehaviour
     #region Show / Hide
     public void Show()
     {
-        if (root != null)
-            root.SetActive(true);
+        if (_root != null)
+            _root.SetActive(true);
 
         OnShow();
     }
@@ -45,8 +45,8 @@ public abstract class UIBase : MonoBehaviour
 
     public void Hide()
     {
-        if (root != null)
-            root.SetActive(false);
+        if (_root != null)
+            _root.SetActive(false);
 
         OnHide();
     }
@@ -55,5 +55,5 @@ public abstract class UIBase : MonoBehaviour
 
     #endregion
 
-    public bool IsActive => root.activeSelf;
+    public bool IsActive => _root.activeSelf;
 }

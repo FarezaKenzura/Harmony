@@ -6,22 +6,22 @@ using UnityEngine;
 [System.Serializable]
 public class NoteEvent
 {
-    public double hitTime;
-    public int lane;
+    public double HitTime;
+    public int Lane;
 }
 
 public class BeatmapBinary
 {
-    public string songName;
-    public float offset;
-    public List<NoteEvent> notes = new List<NoteEvent>();
+    public string SongName;
+    public float Offset;
+    public List<NoteEvent> Notes = new List<NoteEvent>();
 }
 
 public class BeatmapRecorder : MonoBehaviour
 {
-    [SerializeField] private AudioSource music;
-    private BeatmapBinary beatmap = new BeatmapBinary();
-    private bool recording = false;
+    [SerializeField] private AudioSource _music;
+    private BeatmapBinary _beatmap = new BeatmapBinary();
+    private bool _recording = false;
 
     private void Awake()
     {
@@ -30,29 +30,29 @@ public class BeatmapRecorder : MonoBehaviour
 
     public void StartRecording(string songName)
     {
-        beatmap = new BeatmapBinary();
-        beatmap.songName = songName;
-        beatmap.offset = 0f;
+        _beatmap = new BeatmapBinary();
+        _beatmap.SongName = songName;
+        _beatmap.Offset = 0f;
 
-        recording = true;
-        music.Play();
+        _recording = true;
+        _music.Play();
     }
 
     public void RecordLane(int lane)
     {
-        if (!recording) return;
+        if (!_recording) return;
 
-        beatmap.notes.Add(new NoteEvent()
+        _beatmap.Notes.Add(new NoteEvent()
         {
-            hitTime = music.time,
-            lane = lane
+            HitTime = _music.time,
+            Lane = lane
         });
     }
 
     public void StopRecording()
     {
-        recording = false;
-        music.Stop();
+        _recording = false;
+        _music.Stop();
         SaveBinary();
     }
 
@@ -61,19 +61,19 @@ public class BeatmapRecorder : MonoBehaviour
         string folderPath = Path.Combine(Application.dataPath, "StreamingAssets", "Beatmaps");
         Directory.CreateDirectory(folderPath);
 
-        string safeSongName = beatmap.songName.Replace(' ', '_').Replace('\\', '_').Replace('/', '_');
+        string safeSongName = _beatmap.SongName.Replace(' ', '_').Replace('\\', '_').Replace('/', '_');
         string path = Path.Combine(folderPath, safeSongName + ".bin");
 
         using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
         {
-            writer.Write(beatmap.songName);
-            writer.Write(beatmap.offset);
-            writer.Write(beatmap.notes.Count);
+            writer.Write(_beatmap.SongName);
+            writer.Write(_beatmap.Offset);
+            writer.Write(_beatmap.Notes.Count);
 
-            foreach (var n in beatmap.notes)
+            foreach (var n in _beatmap.Notes)
             {
-                writer.Write(n.hitTime);
-                writer.Write(n.lane);
+                writer.Write(n.HitTime);
+                writer.Write(n.Lane);
             }
         }
 

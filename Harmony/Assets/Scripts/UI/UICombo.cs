@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class UICombo : UIBase
 {
-    [SerializeField] private TMP_Text comboText;
-    
+    [SerializeField] private TMP_Text _comboText;
+
     protected override void OnInitialize()
     {
         throw new System.NotImplementedException();

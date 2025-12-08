@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class NoteManager : MonoBehaviour
 {
-    private Dictionary<int, List<Note>> activeNotes = new Dictionary<int, List<Note>>();
+    private Dictionary<int, List<Note>> _activeNotes = new Dictionary<int, List<Note>>();
 
-    [SerializeField] private float hitY = -3.5f;
-    [SerializeField] private float perfectThreshold = 0.1f;
-    [SerializeField] private float goodThreshold = 0.5f;
+    [SerializeField] private float _hitY = -3.5f;
+    [SerializeField] private float _perfectThreshold = 0.1f;
+    [SerializeField] private float _goodThreshold = 0.5f;
 
     private void Awake()
     {
@@ -17,37 +17,37 @@ public class NoteManager : MonoBehaviour
 
     public void RegisterNote(Note n)
     {
-        if (!activeNotes.ContainsKey(n.laneIndex))
+        if (!_activeNotes.ContainsKey(n.LaneIndex))
         {
-            activeNotes.Add(n.laneIndex, new List<Note>());
+            _activeNotes.Add(n.LaneIndex, new List<Note>());
         }
-        activeNotes[n.laneIndex].Add(n);
+        _activeNotes[n.LaneIndex].Add(n);
     }
 
     public void UnregisterNote(Note n)
     {
-        if (activeNotes.ContainsKey(n.laneIndex))
+        if (_activeNotes.ContainsKey(n.LaneIndex))
         {
-            activeNotes[n.laneIndex].Remove(n);
+            _activeNotes[n.LaneIndex].Remove(n);
         }
     }
 
     public void TryHitNote(int laneIndex)
     {
-        if (!activeNotes.ContainsKey(laneIndex) || activeNotes[laneIndex].Count == 0)
+        if (!_activeNotes.ContainsKey(laneIndex) || _activeNotes[laneIndex].Count == 0)
         {
             return;
         }
 
-        Note closestNote = activeNotes[laneIndex][0];
-        float distance = Mathf.Abs(closestNote.transform.position.y - hitY);
+        Note closestNote = _activeNotes[laneIndex][0];
+        float distance = Mathf.Abs(closestNote.transform.position.y - _hitY);
         ComboLevel level;
 
-        if (distance <= perfectThreshold)
+        if (distance <= _perfectThreshold)
         {
             level = ComboLevel.Perfect;
         }
-        else if (distance <= goodThreshold)
+        else if (distance <= _goodThreshold)
         {
             level = ComboLevel.Good;
         }
@@ -56,7 +56,7 @@ public class NoteManager : MonoBehaviour
             return;
         }
 
-        activeNotes[laneIndex].RemoveAt(0);
+        _activeNotes[laneIndex].RemoveAt(0);
         SingletonHub.Instance.Get<ComboManager>().RegisterHit(level, closestNote.gameObject);
     }
 }

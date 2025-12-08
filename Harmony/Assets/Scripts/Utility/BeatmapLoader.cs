@@ -16,18 +16,18 @@ public class BeatmapLoader : MonoBehaviour
 
         using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
         {
-            beatmap.songName = reader.ReadString();
-            beatmap.offset = reader.ReadSingle();
+            beatmap.SongName = reader.ReadString();
+            beatmap.Offset = reader.ReadSingle();
 
             int count = reader.ReadInt32();
-            beatmap.notes = new List<NoteEvent>(count);
+            beatmap.Notes = new List<NoteEvent>(count);
 
             for (int i = 0; i < count; i++)
             {
                 NoteEvent e = new NoteEvent();
-                e.hitTime = reader.ReadDouble();
-                e.lane = reader.ReadInt32();
-                beatmap.notes.Add(e);
+                e.HitTime = reader.ReadDouble();
+                e.Lane = reader.ReadInt32();
+                beatmap.Notes.Add(e);
             }
         }
 

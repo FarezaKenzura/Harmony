@@ -2,13 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ComboLevel
-{
-    Perfect,
-    Good,
-    Miss
-}
-
 public class ScoreManager : MonoBehaviour
 {
     public event System.Action<int> OnScoreChanged;

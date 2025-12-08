@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ComboLevel
+{
+    Perfect,
+    Good,
+    Miss
+}
+
 public class ComboManager : MonoBehaviour
 {
     public event System.Action<int> OnComboChanged;

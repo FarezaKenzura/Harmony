@@ -6,10 +6,10 @@ using UnityEngine.EventSystems;
 
 public class Activater : MonoBehaviour, IPointerDownHandler
 {
-    [SerializeField] private int laneIndex;
+    [SerializeField] private int _laneIndex;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        SingletonHub.Instance.Get<NoteManager>().TryHitNote(laneIndex);
+        SingletonHub.Instance.Get<NoteManager>().TryHitNote(_laneIndex);
     }
 }

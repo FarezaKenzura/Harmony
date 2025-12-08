@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    public int laneIndex { get; set; }
-    public float hitY { get; set; }
-    public float speed { get; set; }
-    public double spawnTime { get; set; }
+    public int LaneIndex { get; set; }
+    public float HitY { get; set; }
+    public float Speed { get; set; }
+    public double SpawnTime { get; set; }
 
     private void Update()
     {
-        transform.position += Vector3.down * speed * Time.deltaTime;
+        transform.position += Vector3.down * Speed * Time.deltaTime;
 
-        if (transform.position.y < hitY - 1f)
+        if (transform.position.y < HitY - 1f)
         {
             SingletonHub.Instance.Get<ComboManager>().RegisterHit(ComboLevel.Miss, gameObject);
             SingletonHub.Instance.Get<NoteManager>().UnregisterNote(this);

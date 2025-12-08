@@ -5,35 +5,35 @@ using UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
-    [SerializeField] private AudioSource music;
-    [SerializeField] private GameObject notePrefab;
+    [SerializeField] private AudioSource _music;
+    [SerializeField] private GameObject _notePrefab;
 
-    [SerializeField] private float[] laneX;
-    [SerializeField] private float spawnY = 6f;
-    [SerializeField] private float hitY = -3.5f;
-    [SerializeField] private float fallSpeed = 5f;
+    [SerializeField] private float[] _laneX;
+    [SerializeField] private float _spawnY = 6f;
+    [SerializeField] private float _hitY = -3.5f;
+    [SerializeField] private float _fallSpeed = 5f;
 
-    private BeatmapBinary beatmap;
-    private double dspStart;
+    private BeatmapBinary _beatmap;
+    private double _dspStart;
 
     private void Start()
     {
         string path = Application.persistentDataPath + "/beatmap.bin";
-        beatmap = SingletonHub.Instance.Get<BeatmapLoader>().LoadBinary(path);
+        _beatmap = SingletonHub.Instance.Get<BeatmapLoader>().LoadBinary(path);
 
-        dspStart = AudioSettings.dspTime + 0.1;
-        music.PlayScheduled(dspStart);
+        _dspStart = AudioSettings.dspTime + 0.1;
+        _music.PlayScheduled(_dspStart);
 
-        foreach (var e in beatmap.notes)
+        foreach (var e in _beatmap.Notes)
             StartCoroutine(Schedule(e));
     }
 
     IEnumerator Schedule(NoteEvent e)
     {
-        double fallTime = (spawnY - hitY) / fallSpeed;
-        double spawnTime = e.hitTime + beatmap.offset - fallTime;
+        double fallTime = (_spawnY - _hitY) / _fallSpeed;
+        double spawnTime = e.HitTime + _beatmap.Offset - fallTime;
 
-        double now = AudioSettings.dspTime - dspStart;
+        double now = AudioSettings.dspTime - _dspStart;
         double delay = spawnTime - now;
 
         if (delay > 0)
@@ -44,14 +44,14 @@ public class NoteSpawner : MonoBehaviour
 
     private void Spawn(NoteEvent e)
     {
-        Vector2 pos = new Vector2(laneX[e.lane], spawnY);
-        GameObject obj = SingletonHub.Instance.Get<ObjectPool>().GetPooledObject(notePrefab, pos, Quaternion.identity);
+        Vector2 pos = new Vector2(_laneX[e.Lane], _spawnY);
+        GameObject obj = SingletonHub.Instance.Get<ObjectPool>().GetPooledObject(_notePrefab, pos, Quaternion.identity);
 
         Note n = obj.GetComponent<Note>();
-        n.laneIndex = e.lane;
-        n.speed = fallSpeed;
-        n.hitY = hitY;
-        n.spawnTime = AudioSettings.dspTime;
+        n.LaneIndex = e.Lane;
+        n.Speed = _fallSpeed;
+        n.HitY = _hitY;
+        n.SpawnTime = AudioSettings.dspTime;
 
         SingletonHub.Instance.Get<NoteManager>().RegisterNote(n);
     }
