@@ -32,7 +32,7 @@ public class NoteManager : MonoBehaviour
         }
     }
 
-    public void TryHitNote(int laneIndex)
+    public void HitNote(int laneIndex)
     {
         if (!_activeNotes.ContainsKey(laneIndex) || _activeNotes[laneIndex].Count == 0)
         {
@@ -40,23 +40,44 @@ public class NoteManager : MonoBehaviour
         }
 
         Note closestNote = _activeNotes[laneIndex][0];
-        float distance = Mathf.Abs(closestNote.transform.position.y - _hitY);
-        ComboLevel level;
+        float distanceToHitPosition = GetDistanceToHitPosition(closestNote);
 
-        if (distance <= _perfectThreshold)
-        {
-            level = ComboLevel.Perfect;
-        }
-        else if (distance <= _goodThreshold)
-        {
-            level = ComboLevel.Good;
-        }
-        else
+        ComboLevel hitLevel = DetermineCombo(distanceToHitPosition);
+
+        if (hitLevel == ComboLevel.Miss)
         {
             return;
         }
 
         _activeNotes[laneIndex].RemoveAt(0);
-        SingletonHub.Instance.Get<ComboManager>().RegisterHit(level, closestNote.gameObject);
+
+        HandleHitRegistration(hitLevel, closestNote.gameObject);
+    }
+
+    private void HandleHitRegistration(ComboLevel level, GameObject note)
+    {
+        SingletonHub.Instance.Get<ComboManager>().ProcessHit(level);
+        SingletonHub.Instance.Get<ObjectPool>().ReturnToPool(note);
+    }
+
+    private float GetDistanceToHitPosition(Note note)
+    {
+        return Mathf.Abs(note.transform.position.y - _hitY);
+    }
+
+    private ComboLevel DetermineCombo(float distance)
+    {
+        if (distance <= _perfectThreshold)
+        {
+            return ComboLevel.Perfect;
+        }
+        else if (distance <= _goodThreshold)
+        {
+            return ComboLevel.Good;
+        }
+        else
+        {
+            return ComboLevel.Miss;
+        }
     }
 }

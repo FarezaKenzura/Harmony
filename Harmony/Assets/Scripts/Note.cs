@@ -16,7 +16,7 @@ public class Note : MonoBehaviour
 
         if (transform.position.y < HitY - 1f)
         {
-            SingletonHub.Instance.Get<ComboManager>().RegisterHit(ComboLevel.Miss, gameObject);
+            SingletonHub.Instance.Get<ComboManager>().ProcessHit(ComboLevel.Miss);
             SingletonHub.Instance.Get<NoteManager>().UnregisterNote(this);
             SingletonHub.Instance.Get<ObjectPool>().ReturnToPool(gameObject);
         }

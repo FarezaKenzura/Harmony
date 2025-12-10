@@ -10,6 +10,6 @@ public class Activater : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        SingletonHub.Instance.Get<NoteManager>().TryHitNote(_laneIndex);
+        SingletonHub.Instance.Get<NoteManager>().HitNote(_laneIndex);
     }
 }

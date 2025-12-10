@@ -11,8 +11,6 @@ public enum ComboLevel
 
 public class ComboManager : MonoBehaviour
 {
-    public event System.Action<int> OnComboChanged;
-
     private int _combo = 0;
 
     private void Awake()
@@ -20,37 +18,21 @@ public class ComboManager : MonoBehaviour
         SingletonHub.Instance.Register(this);
     }
 
-    public int Combo => _combo;
-
-    public void AddCombo()
+    public void ProcessHit(ComboLevel level)
     {
-        _combo++;
-        OnComboChanged?.Invoke(_combo);
-    }
-
-    public void ResetCombo()
-    {
-        _combo = 0;
-        OnComboChanged?.Invoke(_combo);
-    }
-
-    public void RegisterHit(ComboLevel level, GameObject note)
-    {
-        switch (level)
+        if (level == ComboLevel.Perfect || level == ComboLevel.Good)
         {
-            case ComboLevel.Perfect:
-                SingletonHub.Instance.Get<ScoreManager>().AddScore(100);
-                AddCombo();
-                break;
-            case ComboLevel.Good:
-                SingletonHub.Instance.Get<ScoreManager>().AddScore(50);
-                AddCombo();
-                break;
-            case ComboLevel.Miss:
-                ResetCombo();
-                break;
+            _combo++;
         }
-        Debug.Log($"Hit: {level}, Current Combo: {_combo}");
-        SingletonHub.Instance.Get<ObjectPool>().ReturnToPool(note);
+        else
+        {
+            _combo = 0;
+        }
+
+        SingletonHub.Instance.Get<EventBus>().Publish(new ComboChangedEvent
+        {
+            CurrentCombo = _combo,
+            TriggeredLevel = level
+        });
     }
 }

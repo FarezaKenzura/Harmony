@@ -1,28 +1,69 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public event System.Action<int> OnScoreChanged;
     [SerializeField] private int _score;
+    private int _comboMultiplier = 1;
 
-    private void Awake()
+    private const int PerfectScoreBase = 100;
+    private const int GoodScoreBase = 50;
+
+    private void OnEnable()
     {
-        SingletonHub.Instance.Register(this);
+        SingletonHub.Instance.Get<EventBus>().Subscribe<ComboChangedEvent>(ComboRaise);
     }
 
-    public int Score => _score;
-
-    public void AddScore(int amount)
+    private void OnDisable()
     {
-        _score += amount;
-        OnScoreChanged?.Invoke(_score);
+        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ComboChangedEvent>(ComboRaise);
     }
 
-    public void DecreaseScore(int amount)
+    private void ComboRaise(ComboChangedEvent eventData)
     {
-        _score = Mathf.Max(0, _score - amount);
-        OnScoreChanged?.Invoke(_score);
+        ComboMultiplier(eventData.CurrentCombo);
+        ScoreLevel(eventData.TriggeredLevel);
+    }
+
+    private void ComboMultiplier(int combo)
+    {
+        if (combo >= 30)
+        {
+            _comboMultiplier = 4;
+        }
+        else if (combo >= 20)
+        {
+            _comboMultiplier = 3;
+        }
+        else if (combo >= 10)
+        {
+            _comboMultiplier = 2;
+        }
+        else
+        {
+            _comboMultiplier = 1;
+        }
+    }
+
+    private void ScoreLevel(ComboLevel level)
+    {
+        int baseScore = 0;
+
+        switch (level)
+        {
+            case ComboLevel.Perfect:
+                baseScore = PerfectScoreBase;
+                break;
+            case ComboLevel.Good:
+                baseScore = GoodScoreBase;
+                break;
+            case ComboLevel.Miss:
+                return;
+        }
+
+        int finalScore = baseScore * _comboMultiplier;
+        _score += finalScore;
     }
 }
