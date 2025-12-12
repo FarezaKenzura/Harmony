@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &258830043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,7 +556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lineRenderer: {fileID: 958976501}
-  _waveType: 4
+  _waveType: 0
   _width: 20
   _amplitude: 3
   _frequency: 2
@@ -1045,7 +1045,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <WaveData>k__BackingField: {fileID: 11400000, guid: e32319d0b95f13c4194a75978d32b3b3, type: 2}
-  waveRenderer: {fileID: 258830043}
 --- !u!1 &1796481805
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,21 @@ public class UICombo : UIBase
 
     protected override void OnInitialize()
     {
-        throw new System.NotImplementedException();
+
+    }
+
+    private void ComboStatus(ComboChangedEvent eventData)
+    {
+        int combo = eventData.CurrentCombo;
+
+        if (combo > 1)
+        {
+            _comboText.text = $"COMBO\nx{combo}";
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

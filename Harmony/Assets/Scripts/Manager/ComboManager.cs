@@ -32,7 +32,7 @@ public class ComboManager : MonoBehaviour
         SingletonHub.Instance.Get<EventBus>().Publish(new ComboChangedEvent
         {
             CurrentCombo = _combo,
-            TriggeredLevel = level
+            Level = level
         });
     }
 }

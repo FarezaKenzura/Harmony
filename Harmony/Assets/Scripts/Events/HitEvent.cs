@@ -7,5 +7,5 @@ public struct ScoreChangedEvent
 public struct ComboChangedEvent
 {
     public int CurrentCombo;
-    public ComboLevel TriggeredLevel;
+    public ComboLevel Level;
 }

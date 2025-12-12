@@ -13,31 +13,27 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnable()
     {
-        SingletonHub.Instance.Get<EventBus>().Subscribe<ComboChangedEvent>(ComboRaise);
+        SingletonHub.Instance.Get<EventBus>().Subscribe<ComboChangedEvent>(ComboMultiplier);
+        SingletonHub.Instance.Get<EventBus>().Subscribe<ComboChangedEvent>(ScoreLevel);
     }
 
     private void OnDisable()
     {
-        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ComboChangedEvent>(ComboRaise);
+        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ComboChangedEvent>(ComboMultiplier);
+        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ComboChangedEvent>(ScoreLevel);
     }
 
-    private void ComboRaise(ComboChangedEvent eventData)
+    private void ComboMultiplier(ComboChangedEvent eventData)
     {
-        ComboMultiplier(eventData.CurrentCombo);
-        ScoreLevel(eventData.TriggeredLevel);
-    }
-
-    private void ComboMultiplier(int combo)
-    {
-        if (combo >= 30)
+        if (eventData.CurrentCombo >= 30)
         {
             _comboMultiplier = 4;
         }
-        else if (combo >= 20)
+        else if (eventData.CurrentCombo >= 20)
         {
             _comboMultiplier = 3;
         }
-        else if (combo >= 10)
+        else if (eventData.CurrentCombo >= 10)
         {
             _comboMultiplier = 2;
         }
@@ -47,11 +43,11 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void ScoreLevel(ComboLevel level)
+    private void ScoreLevel(ComboChangedEvent eventData)
     {
         int baseScore = 0;
 
-        switch (level)
+        switch (eventData.Level)
         {
             case ComboLevel.Perfect:
                 baseScore = PerfectScoreBase;
