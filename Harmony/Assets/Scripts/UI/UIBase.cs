@@ -6,29 +6,22 @@ using UnityEngine.UI;
 public abstract class UIBase : MonoBehaviour
 {
     [SerializeField] private GameObject _root;
-    [SerializeField] private List<Button> _closeButtons;
-    private bool _isInitialized = false;
 
-    private void Awake()
+    private void OnEnable()
     {
-        foreach (var button in _closeButtons)
-        {
-            button.onClick.AddListener(Hide);
-        }
+        OnInitialize();
+    }
+
+    private void OnDisable()
+    {
+        OnUnitialize();
     }
 
     #region Initialization
 
-    public void Initialize()
-    {
-        if (_isInitialized) return;
-
-        OnInitialize();
-
-        _isInitialized = true;
-    }
-
     protected abstract void OnInitialize();
+
+    protected abstract void OnUnitialize();
 
     #endregion
 

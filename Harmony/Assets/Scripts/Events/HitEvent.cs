@@ -1,7 +1,6 @@
 public struct ScoreChangedEvent
 {
-    public int NewScore;
-    public int ScoreDelta;
+    public long TotalScore;
 }
 
 public struct ComboChangedEvent

@@ -9,7 +9,12 @@ public class UICombo : UIBase
 
     protected override void OnInitialize()
     {
+        SingletonHub.Instance.Get<EventBus>().Subscribe<ComboChangedEvent>(ComboStatus);
+    }
 
+    protected override void OnUnitialize()
+    {
+        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ComboChangedEvent>(ComboStatus);
     }
 
     private void ComboStatus(ComboChangedEvent eventData)
@@ -19,11 +24,11 @@ public class UICombo : UIBase
         if (combo > 1)
         {
             _comboText.text = $"COMBO\nx{combo}";
-            gameObject.SetActive(true);
+            Show();
         }
         else
         {
-            gameObject.SetActive(false);
+            Hide();
         }
     }
 }

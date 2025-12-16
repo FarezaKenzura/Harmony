@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class UIScore : MonoBehaviour
+public class UIScore : UIBase
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TMP_Text _scoreText;
+
+    protected override void OnInitialize()
     {
-        
+        SingletonHub.Instance.Get<EventBus>().Subscribe<ScoreChangedEvent>(ScoreStatus);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnUnitialize()
     {
-        
+        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ScoreChangedEvent>(ScoreStatus);
+    }
+
+    private void ScoreStatus(ScoreChangedEvent eventData)
+    {
+        _scoreText.text = eventData.TotalScore.ToString("N0");
     }
 }

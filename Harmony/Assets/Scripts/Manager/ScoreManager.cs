@@ -61,5 +61,10 @@ public class ScoreManager : MonoBehaviour
 
         int finalScore = baseScore * _comboMultiplier;
         _score += finalScore;
+
+        SingletonHub.Instance.Get<EventBus>().Publish(new ScoreChangedEvent
+        {
+            TotalScore = (long)_score,
+        });
     }
 }
