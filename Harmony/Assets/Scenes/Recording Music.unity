@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc397aa89de75246bdceaa3e5d0ff16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneIndex: 2
+  _laneIndex: 2
 --- !u!1 &191493218
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc397aa89de75246bdceaa3e5d0ff16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneIndex: 4
+  _laneIndex: 4
 --- !u!1 &245621746
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,7 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f54b57c9036b484ca4a48fbda4d4920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  music: {fileID: 245621747}
+  _music: {fileID: 245621747}
 --- !u!1 &367951028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,7 +1115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc397aa89de75246bdceaa3e5d0ff16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneIndex: 3
+  _laneIndex: 3
 --- !u!1 &888189861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,7 +1308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc397aa89de75246bdceaa3e5d0ff16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneIndex: 1
+  _laneIndex: 1
 --- !u!1 &1044723811
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc397aa89de75246bdceaa3e5d0ff16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneIndex: 0
+  _laneIndex: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-50)]
+[DefaultExecutionOrder(-100)]
 public class SingletonHub : MonoBehaviour
 {
     public static SingletonHub Instance { get; private set; }

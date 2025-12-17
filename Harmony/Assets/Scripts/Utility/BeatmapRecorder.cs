@@ -21,6 +21,7 @@ public class BeatmapRecorder : MonoBehaviour
 {
     [SerializeField] private AudioSource _music;
     private BeatmapBinary _beatmap = new BeatmapBinary();
+    private double _recordTime;
     private bool _recording = false;
 
     private void Awake()
@@ -34,6 +35,7 @@ public class BeatmapRecorder : MonoBehaviour
         _beatmap.SongName = songName;
         _beatmap.Offset = 0f;
 
+        _recordTime = AudioSettings.dspTime;
         _recording = true;
         _music.Play();
     }
@@ -44,7 +46,7 @@ public class BeatmapRecorder : MonoBehaviour
 
         _beatmap.Notes.Add(new NoteEvent()
         {
-            HitTime = _music.time,
+            HitTime = AudioSettings.dspTime - _recordTime,
             Lane = lane
         });
     }

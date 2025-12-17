@@ -8,11 +8,14 @@ public class Note : MonoBehaviour
     public int LaneIndex { get; set; }
     public float HitY { get; set; }
     public float Speed { get; set; }
-    public double SpawnTime { get; set; }
+    public double HitTime { get; set; }
 
     private void Update()
     {
-        transform.position += Vector3.down * Speed * Time.deltaTime;
+        float timeRemaining = (float)(HitTime - AudioSettings.dspTime);
+        float currentY = HitY + (timeRemaining * Speed);
+
+        transform.position = new Vector3(transform.position.x, currentY, transform.position.z);
 
         if (transform.position.y < HitY - 1f)
         {

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
+    [SerializeField] private string _songToPlay;
     [SerializeField] private AudioSource _music;
     [SerializeField] private GameObject _notePrefab;
 
@@ -18,7 +19,7 @@ public class NoteSpawner : MonoBehaviour
 
     private void Start()
     {
-        string path = Application.persistentDataPath + "/beatmap.bin";
+        string path = Path.Combine(Application.streamingAssetsPath, "Beatmaps", _songToPlay + ".bin");
         _beatmap = SingletonHub.Instance.Get<BeatmapLoader>().LoadBinary(path);
 
         _dspStart = AudioSettings.dspTime + 0.1;
@@ -30,19 +31,19 @@ public class NoteSpawner : MonoBehaviour
 
     IEnumerator Schedule(NoteEvent e)
     {
-        double fallTime = (_spawnY - _hitY) / _fallSpeed;
-        double spawnTime = e.HitTime + _beatmap.Offset - fallTime;
+        float fallTime = (_spawnY - _hitY) / _fallSpeed;
+        double hitTime = _dspStart + e.HitTime;
+        double spawnTime = hitTime - fallTime;
 
-        double now = AudioSettings.dspTime - _dspStart;
-        double delay = spawnTime - now;
+        while (AudioSettings.dspTime < spawnTime)
+        {
+            yield return null;
+        }
 
-        if (delay > 0)
-            yield return new WaitForSeconds((float)delay);
-
-        Spawn(e);
+        Spawn(e, hitTime);
     }
 
-    private void Spawn(NoteEvent e)
+    private void Spawn(NoteEvent e, double hitTime)
     {
         Vector2 pos = new Vector2(_laneX[e.Lane], _spawnY);
         GameObject obj = SingletonHub.Instance.Get<ObjectPool>().GetPooledObject(_notePrefab, pos, Quaternion.identity);
@@ -51,7 +52,7 @@ public class NoteSpawner : MonoBehaviour
         n.LaneIndex = e.Lane;
         n.Speed = _fallSpeed;
         n.HitY = _hitY;
-        n.SpawnTime = AudioSettings.dspTime;
+        n.HitTime = hitTime;
 
         SingletonHub.Instance.Get<NoteManager>().RegisterNote(n);
     }

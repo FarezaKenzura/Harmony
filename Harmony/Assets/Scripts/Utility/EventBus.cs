@@ -5,6 +5,7 @@ using UnityEngine;
 
 public delegate void EventAction<T>(T eventData);
 
+[DefaultExecutionOrder(-50)]
 public class EventBus : MonoBehaviour
 {
     private readonly Dictionary<Type, Delegate> _eventDictionary = new Dictionary<Type, Delegate>();
