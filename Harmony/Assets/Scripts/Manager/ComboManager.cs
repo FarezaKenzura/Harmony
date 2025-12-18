@@ -18,7 +18,7 @@ public class ComboManager : MonoBehaviour
         SingletonHub.Instance.Register(this);
     }
 
-    public void ProcessHit(ComboLevel level)
+    public void ProcessHit(ComboLevel level, int lane)
     {
         if (level == ComboLevel.Perfect || level == ComboLevel.Good)
         {
@@ -31,6 +31,7 @@ public class ComboManager : MonoBehaviour
 
         SingletonHub.Instance.Get<EventBus>().Publish(new ComboChangedEvent
         {
+            Lane = lane,
             CurrentCombo = _combo,
             Level = level
         });

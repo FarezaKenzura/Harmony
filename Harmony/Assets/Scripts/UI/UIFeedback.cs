@@ -5,61 +5,43 @@ using UnityEngine;
 
 public class UIFeedback : UIBase
 {
-    [SerializeField] private TMP_Text _feedbackText;
+    [SerializeField] private GameObject _feedbackPrefab;
+    [SerializeField] private Transform _feedbackPoints;
+    [SerializeField] private Transform[] _activatorPositions;
     [SerializeField] private float _displayDuration = 0.5f;
-
-    private Coroutine _hideCoroutine;
+    [SerializeField] private float _yOffset = 1.5f;
 
     protected override void OnInitialize()
     {
-        SingletonHub.Instance.Get<EventBus>().Subscribe<ComboChangedEvent>(FeedbackStatus);
+        SingletonHub.Instance.Get<EventBus>().Subscribe<ComboChangedEvent>(SpawnFeedback);
     }
 
     protected override void OnUnitialize()
     {
-        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ComboChangedEvent>(FeedbackStatus);
+        SingletonHub.Instance.Get<EventBus>().Unsubscribe<ComboChangedEvent>(SpawnFeedback);
     }
 
-    private void FeedbackStatus(ComboChangedEvent eventData)
+    private void SpawnFeedback(ComboChangedEvent eventData)
     {
         string text = "";
         Color color = Color.white;
 
         switch (eventData.Level)
         {
-            case ComboLevel.Perfect:
-                text = "PERFECT";
-                color = Color.yellow;
-                break;
-            case ComboLevel.Good:
-                text = "GOOD";
-                color = Color.green;
-                break;
-            case ComboLevel.Miss:
-                text = "MISS";
-                color = Color.red;
-                break;
-            default:
-                return;
+            case ComboLevel.Perfect: text = "PERFECT"; color = Color.yellow; break;
+            case ComboLevel.Good: text = "GOOD"; color = Color.green; break;
+            case ComboLevel.Miss: text = "MISS"; color = Color.red; break;
+            default: return;
         }
 
-        _feedbackText.text = text;
-        _feedbackText.color = color;
+        if (eventData.Lane < 0 || eventData.Lane >= _activatorPositions.Length) return;
 
-        Show();
+        Vector3 spawnPos = _activatorPositions[eventData.Lane].position;
+        spawnPos.y += _yOffset;
 
-        if (_hideCoroutine != null)
-        {
-            StopCoroutine(_hideCoroutine);
-        }
-        _hideCoroutine = StartCoroutine(AutoHideAfterDelay(_displayDuration));
-    }
+        GameObject obj = SingletonHub.Instance.Get<ObjectPool>().GetPooledObject(_feedbackPrefab, spawnPos, Quaternion.identity, _feedbackPoints);
 
-    private IEnumerator AutoHideAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        Hide();
-        _hideCoroutine = null;
+        UIFeedbackItem item = obj.GetComponent<UIFeedbackItem>();
+        item.Setup(text, color, _displayDuration);
     }
 }

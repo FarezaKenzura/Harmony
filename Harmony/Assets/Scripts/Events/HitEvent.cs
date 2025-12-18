@@ -5,6 +5,7 @@ public struct ScoreChangedEvent
 
 public struct ComboChangedEvent
 {
+    public int Lane;
     public int CurrentCombo;
     public ComboLevel Level;
 }

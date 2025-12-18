@@ -8,6 +8,7 @@ public class NoteSpawner : MonoBehaviour
     [SerializeField] private string _songToPlay;
     [SerializeField] private AudioSource _music;
     [SerializeField] private GameObject _notePrefab;
+    [SerializeField] private Transform _notePoints;
 
     [SerializeField] private float[] _laneX;
     [SerializeField] private float _spawnY = 6f;
@@ -46,7 +47,7 @@ public class NoteSpawner : MonoBehaviour
     private void Spawn(NoteEvent e, double hitTime)
     {
         Vector2 pos = new Vector2(_laneX[e.Lane], _spawnY);
-        GameObject obj = SingletonHub.Instance.Get<ObjectPool>().GetPooledObject(_notePrefab, pos, Quaternion.identity);
+        GameObject obj = SingletonHub.Instance.Get<ObjectPool>().GetPooledObject(_notePrefab, pos, Quaternion.identity, _notePoints);
 
         Note n = obj.GetComponent<Note>();
         n.LaneIndex = e.Lane;

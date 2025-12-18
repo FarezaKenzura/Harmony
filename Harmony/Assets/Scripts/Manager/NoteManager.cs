@@ -51,12 +51,12 @@ public class NoteManager : MonoBehaviour
 
         _activeNotes[laneIndex].RemoveAt(0);
 
-        HandleHitRegistration(hitLevel, closestNote.gameObject);
+        HandleHitRegistration(hitLevel, closestNote.gameObject, laneIndex);
     }
 
-    private void HandleHitRegistration(ComboLevel level, GameObject note)
+    private void HandleHitRegistration(ComboLevel level, GameObject note, int laneIndex)
     {
-        SingletonHub.Instance.Get<ComboManager>().ProcessHit(level);
+        SingletonHub.Instance.Get<ComboManager>().ProcessHit(level, laneIndex);
         SingletonHub.Instance.Get<ObjectPool>().ReturnToPool(note);
     }
 

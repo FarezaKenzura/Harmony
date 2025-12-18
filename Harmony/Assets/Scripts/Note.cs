@@ -17,9 +17,9 @@ public class Note : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, currentY, transform.position.z);
 
-        if (transform.position.y < HitY - 1f)
+        if (transform.position.y < HitY - 2f)
         {
-            SingletonHub.Instance.Get<ComboManager>().ProcessHit(ComboLevel.Miss);
+            SingletonHub.Instance.Get<ComboManager>().ProcessHit(ComboLevel.Miss, LaneIndex);
             SingletonHub.Instance.Get<NoteManager>().UnregisterNote(this);
             SingletonHub.Instance.Get<ObjectPool>().ReturnToPool(gameObject);
         }
